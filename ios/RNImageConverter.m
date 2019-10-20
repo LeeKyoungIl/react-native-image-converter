@@ -1,3 +1,9 @@
+//
+//  RNImageConverter.m
+//
+//  Created by Kellin on 2019/10/20.
+//  Copyright © 2019 https://github.com/LeeKyoungIl/react-native-image-converter. All rights reserved.
+//
 
 #import "RNImageConverter.h"
 
@@ -93,11 +99,6 @@ RCT_EXPORT_METHOD(imageConvert:(NSDictionary *) params
 }
 
 - (UIImage *) modifyImage:(UIImage *) originImage resizeRatio:(CGFloat) sizeRatio {
-    const int colorRed = 1;
-    const int colorGreen = 2;
-    const int colorBlue = 4;
-    
-    const int colors = colorRed | colorGreen | colorBlue;
     const int resizeWidth = originImage.size.width * sizeRatio;
     const int resizeHeight = originImage.size.height * sizeRatio;
 
@@ -135,7 +136,6 @@ RCT_EXPORT_METHOD(imageConvert:(NSDictionary *) params
     
     uint32_t *rgbImage = (uint32_t *) malloc(originWidth * originHeight * sizeof(uint32_t));
 
-    // grayscale
     uint8_t *imageData = (uint8_t *) malloc(originWidth * originHeight);
     for(int y = 0; y < originHeight; y++) {
         for(int x = 0; x < originWidth; x++) {

@@ -20,6 +20,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author kellin.me (Lee Kyoungil) [mailto:leekyoungil@gmail.com]
+ */
 public class ImageConverterUtil {
 
     private static final String URI_DATA = "data";

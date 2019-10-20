@@ -17,10 +17,15 @@ class IImageConverter {
 
         if (Platform.OS === "ios") {
             return RNImageConverter.imageConvert(param).then(result => (result));
-        } else {
+        } else if (Platform.OS === "android") {
             return new Promise((resolve, reject) => {
                 RNImageConverter.imageConvert(param, resolve, reject);
               });
+        } else {
+            return {
+                success: false,
+                errorMsg: "not yet supported.("+Platform.OS+")"
+            }
         }
     }
 }

@@ -10,6 +10,10 @@ import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.bridge.JavaScriptModule;
+
+/**
+ * @author kellin.me (Lee Kyoungil) [mailto:leekyoungil@gmail.com]
+ */
 public class RNImageConverterPackage implements ReactPackage {
 
     @Override

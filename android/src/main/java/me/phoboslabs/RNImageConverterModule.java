@@ -18,6 +18,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.Date;
 
+/**
+ * @author kellin.me (Lee Kyoungil) [mailto:leekyoungil@gmail.com]
+ */
 public class RNImageConverterModule extends ReactContextBaseJavaModule {
 
   private final Context reactContext;
