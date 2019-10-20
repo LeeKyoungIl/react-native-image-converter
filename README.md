@@ -27,7 +27,7 @@ react-native link react-native-image-converter
 * add to yarn package.json
 ```
 "dependencies": {
-    "react-native-image-converter": "^0.3.1"
+    "react-native-image-converter": "^0.3.2"
 }
 ```
 
