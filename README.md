@@ -63,6 +63,20 @@ const { success, errorMsg, imageURI } = await IImageConverter.convert(param)
  - type : float
  - description : Image quality, between 0.1 to 1.0.
 
+## response param
+
+#### success
+ - type : boolean
+ - description : success(true) or failure(false).
+
+#### errorMsg
+ - type : string
+ - description : the message of errors.
+
+#### imageURI
+ - type : string
+ - description : The absolute path of the edited file. (URI)
+
 ### ios
  - In the Xcode, in the project navigator and right click `Libraries` -> Add Files to `your project name`
  - Go to `node_modules` -> `react-native-image-converter` and add `RNImageConverter.xcodeproj`
