@@ -1,0 +1,25 @@
+{
+  "name": "react-native-image-converter",
+  "version": "0.3.0",
+  "description": "image converter module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeeKyoungIl/react-native-image-converter.git"
+  },
+  "keywords": [
+    "image",
+    "filter",
+    "gray",
+    "converter"
+  ],
+  "author": "Kyoungil Lee <leekyoungil@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LeeKyoungIl/react-native-image-converter/issues"
+  },
+  "homepage": "https://github.com/LeeKyoungIl/react-native-image-converter#readme"
+}
