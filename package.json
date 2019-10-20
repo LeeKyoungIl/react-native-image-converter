@@ -1,6 +1,6 @@
 {
   "name": "react-native-image-converter",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "image converter module",
   "main": "index.js",
   "scripts": {
