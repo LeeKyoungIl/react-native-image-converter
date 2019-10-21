@@ -51,6 +51,8 @@ class IImageConverter {
             } else {
                 return checkDataToString;
             }
+        } catch(error) {
+            return "1.0";
         }
     }
 }
