@@ -88,14 +88,18 @@ public class ImageConverterUtil {
         throw new Exception("An error occurred while working on Bitmap base64 processing by URI.");
     }
 
-    public static Bitmap getImageByResize(final Bitmap image, final float resizeRatio) throws Exception {
+    public static Bitmap getImageByResize(final Bitmap image, final float resizeRatio, final boolean reuseInputImage) throws Exception {
         if (image == null) {
             throw new Exception("image must not be null.");
         }
         try {
             final int width = (int)(image.getWidth() * resizeRatio);
             final int height = (int)(image.getHeight() * resizeRatio);
-            return Bitmap.createScaledBitmap(image, width, height, true);
+            Bitmap resultImage = Bitmap.createScaledBitmap(image, width, height, true);
+            if (reuseInputImage == false) {
+                image.recycle();
+            }
+            return resultImage;
         } catch (OutOfMemoryError ex) {
             throw ex;
         }
@@ -123,6 +127,8 @@ public class ImageConverterUtil {
         fos.write(imageDataArray);
         fos.flush();
         fos.close();
+
+        image.recycle();
     }
 
     private static final float[] GRAYSCALE_MATRIX = new float[]{0.3f, 0.59f, 0.11f, 0, 0, 0.3f, 0.59f, 0.11f, 0, 0, 0.3f, 0.59f, 0.11f, 0, 0, 0, 0, 0, 1, 0,};

@@ -74,7 +74,7 @@ public class RNImageConverterModule extends ReactContextBaseJavaModule {
         if (data.hasKey(RESIZE_RATIO_KEY) == true) {
           final float resizeRatio = Float.parseFloat(data.getString(RESIZE_RATIO_KEY));
           if (resizeRatio > 0.0 && resizeRatio < 1.0) {
-            resizeImage = ImageConverterUtil.getImageByResize(sourceImage, resizeRatio);
+            resizeImage = ImageConverterUtil.getImageByResize(sourceImage, resizeRatio, false);
           }
         }
 
