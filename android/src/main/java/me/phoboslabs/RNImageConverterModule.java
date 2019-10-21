@@ -53,7 +53,7 @@ public class RNImageConverterModule extends ReactContextBaseJavaModule {
   private static Bitmap.CompressFormat COMPRESS_FORMAT = Bitmap.CompressFormat.valueOf("JPEG");
 
   @ReactMethod
-  public void imageConvert(ReadableMap data, final Callback successCb, final Callback failureCb) {
+  public void imageConvert(ReadableMap data, final Callback responseCb) {
     String errorMessage = null;
     if (data.hasKey(PATH_KEY) == false) {
       errorMessage = ERROR_MESSAGE_EMPTY_URI_KEY;
@@ -61,16 +61,13 @@ public class RNImageConverterModule extends ReactContextBaseJavaModule {
       errorMessage = ERROR_MESSAGE_EMPTY_URI_VALUE;
     }
 
-    WritableMap response = Arguments.createMap();
-
     if (StringUtils.isBlank(errorMessage)) {
-      String savedImageURI = null;
       Uri imageURI = Uri.parse(data.getString(PATH_KEY));
 
       try {
-        Bitmap resizeImage = null, grayscaleImage = null;
         Bitmap sourceImage = ImageConverterUtil.getSourceImageByPath(this.reactContext, imageURI);
 
+        Bitmap resizeImage = null;
         if (data.hasKey(RESIZE_RATIO_KEY) == true) {
           final float resizeRatio = Float.parseFloat(data.getString(RESIZE_RATIO_KEY));
           if (resizeRatio > 0.0 && resizeRatio < 1.0) {
@@ -78,22 +75,23 @@ public class RNImageConverterModule extends ReactContextBaseJavaModule {
           }
         }
 
-        if (data.hasKey(GRAYSCALE_KEY) == true) {
-          final boolean grayscale = Boolean.parseBoolean(data.getString(GRAYSCALE_KEY));
-          if (grayscale) {
-            grayscaleImage = ImageConverterUtil.imageToGrayscale(resizeImage != null ? resizeImage : sourceImage);
-          }
+        Bitmap grayscaleImage = null;
+        if (data.hasKey(GRAYSCALE_KEY) && Boolean.parseBoolean(data.getString(GRAYSCALE_KEY))) {
+          grayscaleImage = ImageConverterUtil.imageToGrayscale(resizeImage != null ? resizeImage : sourceImage);
         }
 
         float imageQuality = 1.0f;
-        if (data.hasKey(IMAGE_QUALITY_KEY) == true) {
-          imageQuality = Float.parseFloat(data.getString(IMAGE_QUALITY_KEY));
-        }
+        try {
+          if (data.hasKey(IMAGE_QUALITY_KEY) == true) {
+            imageQuality = Float.parseFloat(data.getString(IMAGE_QUALITY_KEY));
+          }
+        } catch (NumberFormatException ignore) {}
 
         Bitmap targetImage;
         if (grayscaleImage != null) {
           targetImage = Bitmap.createBitmap(grayscaleImage);
           grayscaleImage.recycle();
+
           if (resizeImage != null) {
             resizeImage.recycle();
           }
@@ -105,31 +103,50 @@ public class RNImageConverterModule extends ReactContextBaseJavaModule {
         }
         sourceImage.recycle();
 
-        final String fileName = Long.toString(new Date().getTime()).concat(".").concat(COMPRESS_FORMAT.name());
-        File saveTargetFile = new File(this.reactContext.getCacheDir(), fileName);
-
-        ImageConverterUtil.saveImageFile(targetImage, saveTargetFile, COMPRESS_FORMAT, imageQuality);
-        if (saveTargetFile.exists() && saveTargetFile.canRead()) {
-          savedImageURI = ANDROID_URI_FILE_SCHEME.concat(saveTargetFile.getAbsolutePath());
+        try {
+          WritableMap response = this.getReturnMessage(true);
+          response.putString(IMAGE_URI_KEY, this.saveToLocalStorage(targetImage, imageQuality));
+          responseCb.invoke(response);
+        } catch (Exception ex) {
+          responseCb.invoke(this.getReturnMessage(false, ex.getMessage()));
         }
-
-        boolean result = false;
-        if (StringUtils.isNotBlank(savedImageURI)) {
-          result = true;
-          response.putString(IMAGE_URI_KEY, savedImageURI);
-        } else {
-          response.putString(ERROR_MESSAGE_KEY, ERROR_MESSAGE_FILE_SAVE_FAILED);
-        }
-        response.putBoolean(SUCCESS_KEY, result);
       } catch (Exception ex) {
-        response.putBoolean(SUCCESS_KEY, false);
-        response.putString(ERROR_MESSAGE_KEY, ex.getMessage());
+        responseCb.invoke(this.getReturnMessage(false, ex.getMessage()));
       }
     } else {
-      response.putBoolean(SUCCESS_KEY, false);
+      responseCb.invoke(this.getReturnMessage(false, errorMessage));
+    }
+  }
+
+  private String saveToLocalStorage(Bitmap targetImage, final float imageQuality) throws Exception {
+    try {
+      final String fileName = Long.toString(new Date().getTime()).concat(".").concat(COMPRESS_FORMAT.name());
+      File saveTargetFile = new File(this.reactContext.getCacheDir(), fileName);
+
+      ImageConverterUtil.saveImageFile(targetImage, saveTargetFile, COMPRESS_FORMAT, imageQuality);
+      if (saveTargetFile.exists() && saveTargetFile.canRead()) {
+        return ANDROID_URI_FILE_SCHEME.concat(saveTargetFile.getAbsolutePath());
+      }
+    } catch (Exception ex) {
+      throw ex;
+    }
+
+    throw new Exception(ERROR_MESSAGE_FILE_SAVE_FAILED);
+  }
+
+  private WritableMap getReturnMessage(final boolean isSuccess, final String errorMessage) {
+    WritableMap response = this.getReturnMessage(isSuccess);
+    if (StringUtils.isNotBlank(errorMessage)) {
       response.putString(ERROR_MESSAGE_KEY, errorMessage);
     }
 
-    successCb.invoke(response);
+    return response;
+  }
+
+  private WritableMap getReturnMessage(final boolean isSuccess) {
+    WritableMap response = Arguments.createMap();
+    response.putBoolean(SUCCESS_KEY, isSuccess);
+
+    return response;
   }
 }

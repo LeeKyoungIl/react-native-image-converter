@@ -19,14 +19,14 @@ class IImageConverter {
             param.imageQuality = IImageConverter.checkToInputValue(param.imageQuality);
         } else {
             param.imageQuality = "1.0";
-        }    
+        }
 
         try {
             if (Platform.OS === "ios") {
                 return RNImageConverter.imageConvert(param).then(result => (result));
             } else if (Platform.OS === "android") {
-                return new Promise((resolve, reject) => {
-                    RNImageConverter.imageConvert(param, resolve, reject);
+                return new Promise((resolve) => {
+                    RNImageConverter.imageConvert(param, resolve);
                   });
             } else {
                 return {
@@ -37,7 +37,7 @@ class IImageConverter {
         } catch(error) {
             return {
                 success: false,
-                errorMsg: "check your native module setting."
+                errorMsg: "check your native("+Platform.OS+") module setting."
             }
         }
     }

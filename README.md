@@ -8,7 +8,7 @@ A React-native module it can modify an image by simply.
  - grayscale
 
 ### latest version
- - 0.3.10
+ - 0.3.11
 
 ## install
 
@@ -27,7 +27,7 @@ react-native link react-native-image-converter
 * add to yarn package.json
 ```
 "dependencies": {
-    "react-native-image-converter": "^0.3.10"
+    "react-native-image-converter": "^0.3.11"
 }
 ```
 
@@ -63,7 +63,7 @@ const { success, errorMsg, imageURI } = await IImageConverter.convert(param)
  - type : float
  - description : Image quality, between 0.1 to 1.0.
 
-## response param
+## response value
 
 #### success
  - type : boolean
