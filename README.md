@@ -8,7 +8,7 @@ A React-native module it can modify an image by simply.
  - grayscale
 
 ### latest version
- - 0.3.6
+ - 0.3.7
 
 ## install
 
@@ -27,7 +27,7 @@ react-native link react-native-image-converter
 * add to yarn package.json
 ```
 "dependencies": {
-    "react-native-image-converter": "^0.3.6"
+    "react-native-image-converter": "^0.3.7"
 }
 ```
 

@@ -125,65 +125,27 @@ RCT_EXPORT_METHOD(imageConvert:(NSDictionary *) params
     return resultUIImage;
 }
 
+/**
+    * https://gist.github.com/doskoi/1653064 this mehod, I Referenced here.
+ */
 - (UIImage *) convertToGray:(UIImage *) originImage {
-    const int colorRed = 1;
-    const int colorGreen = 2;
-    const int colorBlue = 4;
+    int const imageWith = originImage.size.width;
+    int const imageHeight = originImage.size.height;
     
-    const int colors = colorRed | colorGreen | colorBlue;
-    const int originWidth = originImage.size.width;
-    const int originHeight = originImage.size.height;
-    
-    uint32_t *rgbImage = (uint32_t *) malloc(originWidth * originHeight * sizeof(uint32_t));
+    CGRect imageRect = CGRectMake(0, 0, imageWith, imageHeight);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    CGContextRef context = CGBitmapContextCreate(nil, imageWith, imageHeight, 8, 0, colorSpace, kCGImageAlphaNone);
 
-    uint8_t *imageData = (uint8_t *) malloc(originWidth * originHeight);
-    for(int y = 0; y < originHeight; y++) {
-        for(int x = 0; x < originWidth; x++) {
-            uint32_t rgbPixel = rgbImage[(y * originWidth) + x];
-            uint32_t sum = 0;
-            uint32_t count = 0;
+    CGContextDrawImage(context, imageRect, [originImage CGImage]);
 
-            if (colors & colorRed) {
-                sum += (rgbPixel >> 24) & 255;
-                count++;
-            }
-            if (colors & colorGreen) {
-                sum += (rgbPixel >> 16) & 255;
-                count++;
-            }
-            if (colors & colorBlue) {
-                sum += (rgbPixel >> 8) & 255;
-                count++;
-            }
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    UIImage *newImage = [UIImage imageWithCGImage:imageRef];
 
-            imageData[(y * originWidth) + x] = sum / count;
-        }
-    }
-
-    uint8_t *result = (uint8_t *) calloc(originWidth * originHeight * sizeof(uint32_t), 1);
-
-    for(int i = 0; i < (originHeight * originWidth); i++) {
-        result[i * 4] = 0;
-        const int val = imageData[i];
-
-        result[i*4+1] = val;
-        result[i*4+2] = val;
-        result[i*4+3] = val;
-    }
-
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(result, originWidth, originHeight, 8, originWidth * sizeof(uint32_t), colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast);
-    
-    CGImageRef image = CGBitmapContextCreateImage(context);
-    
-    CGContextRelease(context);
     CGColorSpaceRelease(colorSpace);
-    
-    UIImage *resultUIImage = [UIImage imageWithCGImage:image];
-    
-    CGImageRelease(image);
+    CGContextRelease(context);
+    CFRelease(imageRef);
 
-    return resultUIImage;
+    return newImage;
 }
 
 @end
