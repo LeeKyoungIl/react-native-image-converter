@@ -21,16 +21,23 @@ class IImageConverter {
             param.imageQuality = "1.0";
         }    
 
-        if (Platform.OS === "ios") {
-            return RNImageConverter.imageConvert(param).then(result => (result));
-        } else if (Platform.OS === "android") {
-            return new Promise((resolve, reject) => {
-                RNImageConverter.imageConvert(param, resolve, reject);
-              });
-        } else {
+        try {
+            if (Platform.OS === "ios") {
+                return RNImageConverter.imageConvert(param).then(result => (result));
+            } else if (Platform.OS === "android") {
+                return new Promise((resolve, reject) => {
+                    RNImageConverter.imageConvert(param, resolve, reject);
+                  });
+            } else {
+                return {
+                    success: false,
+                    errorMsg: "not yet supported.("+Platform.OS+")"
+                }
+            }
+        } catch(error) {
             return {
                 success: false,
-                errorMsg: "not yet supported.("+Platform.OS+")"
+                errorMsg: "check your native module setting."
             }
         }
     }
@@ -44,8 +51,6 @@ class IImageConverter {
             } else {
                 return checkDataToString;
             }
-        } catch(error) {
-            return "1.0";
         }
     }
 }
