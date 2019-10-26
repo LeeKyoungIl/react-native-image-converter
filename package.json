@@ -1,6 +1,6 @@
 {
   "name": "react-native-image-converter",
-  "version": "0.3.11",
+  "version": "0.4.1",
   "description": "image converter module",
   "main": "index.js",
   "scripts": {
@@ -14,6 +14,9 @@
     "image",
     "filter",
     "gray",
+    "grayscale",
+    "base64",
+    "encoding",
     "converter"
   ],
   "author": "Kyoungil Lee <leekyoungil@gmail.com>",

@@ -10,6 +10,11 @@ class IImageConverter {
         } else {
             param.grayscale = "false";
         }
+        if (param.hasOwnProperty('base64')) {
+            param.base64 = param.base64.toString().toLowerCase();
+        } else {
+            param.base64 = "false";
+        }
         if (param.hasOwnProperty('resizeRatio')) {
             param.resizeRatio = IImageConverter.checkToInputValue(param.resizeRatio);
         } else {

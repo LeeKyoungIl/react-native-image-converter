@@ -15,11 +15,13 @@ static NSString *const ERROR_MESSAGE_EMPTY_URI_VALUE = @"URI Path Value must not
 static NSString *const SUCCESS_KEY = @"success";
 static NSString *const ERROR_MESSAGE_KEY = @"errorMsg";
 static NSString *const IMAGE_URI_KEY = @"imageURI";
+static NSString *const BASE64_KEY = @"base64";
 
 static NSString *const PATH_KEY = @"path";
 static NSString *const GRAYSCALE_KEY = @"grayscale";
 static NSString *const RESIZE_RATIO_KEY = @"resizeRatio";
 static NSString *const IMAGE_QUALITY_KEY = @"imageQuality";
+static NSString *const BASE64_STRING_KEY = @"base64String";
 
 static NSString *const SAVE_IMAGE_FILE_NAME_BY_OVERWRITE = @"modifiedImage.jpg";
 
@@ -73,11 +75,18 @@ RCT_EXPORT_METHOD(imageConvert:(NSDictionary *) params
         grayscaleImage = [self convertToGray:resizedImage];
     }
     
-    return resolve(@{
-        SUCCESS_KEY: @YES,
-        IMAGE_URI_KEY:
-            [self saveImageToLocal:(grayscaleImage != nil ? grayscaleImage : resizedImage) fileName:SAVE_IMAGE_FILE_NAME_BY_OVERWRITE imageQuality:imageQuality]
-    });
+    if ([params objectForKey:BASE64_KEY] && [params[BASE64_KEY] boolValue]) {
+        return resolve(@{
+            SUCCESS_KEY: @YES,
+            BASE64_STRING_KEY:[self getBase64FromImage:(grayscaleImage != nil ? grayscaleImage : resizedImage)]
+        });
+    } else {
+        return resolve(@{
+            SUCCESS_KEY: @YES,
+            IMAGE_URI_KEY:
+                [self saveImageToLocal:(grayscaleImage != nil ? grayscaleImage : resizedImage) fileName:SAVE_IMAGE_FILE_NAME_BY_OVERWRITE imageQuality:imageQuality]
+        });
+    }
 }
 
 - (UIImage *) getNSImageByURI:(NSString *) uri {
@@ -146,6 +155,11 @@ RCT_EXPORT_METHOD(imageConvert:(NSDictionary *) params
     CFRelease(imageRef);
 
     return newImage;
+}
+
+- (NSString *) getBase64FromImage:(UIImage *) originImage {
+    NSData *imageData = UIImageJPEGRepresentation(originImage, 1.0);
+    return [imageData base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed];
 }
 
 @end

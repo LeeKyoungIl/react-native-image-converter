@@ -8,7 +8,7 @@ A React-native module it can modify an image by simply.
  - grayscale
 
 ### latest version
- - 0.3.11
+ - 0.4.1
 
 ## install
 
@@ -27,7 +27,7 @@ react-native link react-native-image-converter
 * add to yarn package.json
 ```
 "dependencies": {
-    "react-native-image-converter": "^0.3.11"
+    "react-native-image-converter": "^0.4.1"
 }
 ```
 
@@ -38,11 +38,12 @@ import IImageConverter from 'react-native-image-converter'
 const param = {
         path: uri,
         grayscale: false, // or true
+        base64: false, // or true
         resizeRatio: 0.8, // 1.0 is origin value
         imageQuality: 0.7 // 1.0 is max quality value
       }
 
-const { success, errorMsg, imageURI } = await IImageConverter.convert(param)
+const { success, errorMsg, imageURI, base64String } = await IImageConverter.convert(param)
 ```
 
 ## request param
@@ -54,6 +55,10 @@ const { success, errorMsg, imageURI } = await IImageConverter.convert(param)
 #### grayscale - optional value (default value is false)
  - type : boolean
  - description : If you want to make to grayscale, set true.
+
+#### base64 - optional value (default value is false)
+ - type : boolean
+ - description : If you want to get image data by base64 encoding, set true.
 
 #### resizeRatio - optional value (default value is 1.0)
  - type : float
@@ -77,6 +82,12 @@ const { success, errorMsg, imageURI } = await IImageConverter.convert(param)
  - type : string
  - description : The absolute path of the edited file. (URI)
 
+#### base64String
+ - type : string
+ - description : base64 encoded text data.
+
+## setting the module to the project.
+
 ### ios
  - In the Xcode, in the project navigator and right click `Libraries` -> Add Files to `your project name`
  - Go to `node_modules` -> `react-native-image-converter` and add `RNImageConverter.xcodeproj`
@@ -98,7 +109,7 @@ const { success, errorMsg, imageURI } = await IImageConverter.convert(param)
  - Insert the line of dependencies block in `android/app/build.gradle`
 
   	```
-   compile project(':react-image-converter')
+   compile project(':react-native-image-converter')
   	```
 
 # License

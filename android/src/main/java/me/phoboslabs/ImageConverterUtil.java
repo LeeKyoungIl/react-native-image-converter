@@ -147,4 +147,10 @@ public class ImageConverterUtil {
 
         return convertedImage;
     }
+
+    public static String getBase64FromBitmap(Bitmap bitmap, final Bitmap.CompressFormat compressFormat) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(compressFormat, 100, byteArrayOutputStream);
+        return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+    }
 }

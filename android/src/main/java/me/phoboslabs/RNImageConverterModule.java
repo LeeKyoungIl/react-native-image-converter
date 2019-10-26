@@ -28,6 +28,7 @@ public class RNImageConverterModule extends ReactContextBaseJavaModule {
   private static final String SUCCESS_KEY = "success";
   private static final String ERROR_MESSAGE_KEY = "errorMsg";
   private static final String IMAGE_URI_KEY = "imageURI";
+  private static final String BASE64_STRING_KEY = "base64String";
 
   private static final String ERROR_MESSAGE_EMPTY_URI_KEY = "URI Path KEY('path') must not be null.";
   private static final String ERROR_MESSAGE_EMPTY_URI_VALUE = "URI Path Value must not be null.";
@@ -45,6 +46,7 @@ public class RNImageConverterModule extends ReactContextBaseJavaModule {
 
   private static final String PATH_KEY = "path";
   private static final String GRAYSCALE_KEY = "grayscale";
+  private static final String BASE64_KEY = "base64";
   private static final String RESIZE_RATIO_KEY = "resizeRatio";
   private static final String IMAGE_QUALITY_KEY = "imageQuality";
 
@@ -105,7 +107,13 @@ public class RNImageConverterModule extends ReactContextBaseJavaModule {
 
         try {
           WritableMap response = this.getReturnMessage(true);
-          response.putString(IMAGE_URI_KEY, this.saveToLocalStorage(targetImage, imageQuality));
+
+          if (data.hasKey(BASE64_KEY) && Boolean.parseBoolean(data.getString(BASE64_KEY))) {
+            response.putString(BASE64_STRING_KEY, ImageConverterUtil.getBase64FromBitmap(targetImage, COMPRESS_FORMAT));
+          } else {
+            response.putString(IMAGE_URI_KEY, this.saveToLocalStorage(targetImage, imageQuality));
+          }
+
           responseCb.invoke(response);
         } catch (Exception ex) {
           responseCb.invoke(this.getReturnMessage(false, ex.getMessage()));
