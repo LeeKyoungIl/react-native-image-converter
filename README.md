@@ -6,6 +6,7 @@ A React-native module it can modify an image by simply.
  - resize
  - quality
  - grayscale
+ - base64 encoding
 
 ### latest version
  - 0.4.1
