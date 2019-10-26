@@ -95,7 +95,7 @@ const { success, errorMsg, imageURI, base64String } = await IImageConverter.conv
  - In the Xcode, in the project navigator and select your project. Add `libRNImageConverter.a` to your project's `Build Phases` -> `Link Binary With Libraries`
  - Build & run your project
 
- ### android
+### android
   - Open `android/app/src/main/java/your project name/MainApplication.java`
   - Add `import me.phoboslabs.RNImageConverterPackage;` to the imports line
   - Add `new RNImageConverterPackage()` to the list of the `getPackages()` method
